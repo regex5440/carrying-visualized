@@ -1,20 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DotConnector from "./DotConnector";
 import { calculateExpression } from "../utils";
 
 type FunctionCardProps = {
   functionNumber: number;
+  inputX: number | undefined;
+  setOutput: (number: number | null, functionNumber: number) => void;
 };
-export function FunctionCard({ functionNumber }: FunctionCardProps) {
+export function FunctionCard({
+  functionNumber,
+  inputX,
+  setOutput,
+}: FunctionCardProps) {
   const [expression, setExpression] = useState<string>("");
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
+
+  function doCalculation() {
+    let output = null;
+    if (inputX) {
+      output = calculateExpression(expression, inputX);
+    }
+    setOutput(output, functionNumber);
+    setIsInvalid(!Boolean(output));
+  }
 
   function inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const expression = e.target.value.toLowerCase().replace(/\s+/, "");
     setExpression(expression);
-    const output = calculateExpression(expression);
-    setIsInvalid(output === undefined ? true : false);
   }
+
+  useEffect(doCalculation, [inputX, expression]);
 
   return (
     <div className="card">
