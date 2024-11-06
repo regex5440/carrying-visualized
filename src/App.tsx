@@ -1,5 +1,4 @@
 import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
-import "./App.css";
 import { FunctionCard } from "./components/FunctionCard";
 import DotConnector from "./components/DotConnector";
 import type { FunctionOutputInputMap, InputFunctionName } from "./utils/types";
@@ -90,8 +89,13 @@ function App() {
           <input
             type="text"
             value={Math.floor(functionOutputs[functionOutputInputMap.y]) || ""}
-            className="border-l text-lg font-bold max-w-[60%] outline-none py-3 pl-4"
+            className="border-l text-lg font-bold max-w-[65%] outline-none py-3 pl-1"
             readOnly
+            title={
+              Math.floor(
+                functionOutputs[functionOutputInputMap.y]
+              )?.toString() || ""
+            }
           />
           <DotConnector ref={endPointRef} />
         </div>
