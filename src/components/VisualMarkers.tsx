@@ -49,7 +49,19 @@ export default function VisualMarker({
         "http://www.w3.org/2000/svg",
         "path"
       );
-      path.setAttribute("d", `M${x1},${y1} L${x2} ${y2}`);
+      if (y1 === y2) {
+        path.setAttribute(
+          "d",
+          `M${x1} ${y1} Q ${x1 + 100} ${y1 + 100} ${x2} ${y2}`
+        );
+      } else {
+        path.setAttribute(
+          "d",
+          `M${x1} ${y1} C${x1} ${(y1 + y2) / 2} ,${x2} ${
+            (y1 + y2) / 2
+          }, ${x2} ${y2}`
+        );
+      }
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", "#0066FF4D");
       path.setAttribute("stroke-width", "7");
