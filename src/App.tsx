@@ -48,8 +48,8 @@ function App() {
     setOutput(Number(e.target.value || undefined), "x");
   }
   return (
-    <div className="flex gap-10 justify-center items-center h-screen px-10">
-      <div className="self-center">
+    <div className="flex gap-10 justify-center items-center min-h-screen lg:px-10 max-lg:p-3 max-md:flex-col">
+      <div className="self-center max-md:self-start">
         <label className="px-3 py-1 bg-[#E29A2D] text-xs font-semibold rounded-xl text-white">
           Initial value of x
         </label>
@@ -63,7 +63,7 @@ function App() {
           <DotConnector ref={startPointRef} />
         </div>
       </div>
-      <div className="flex flex-wrap justify-evenly gap-24">
+      <div className="flex flex-wrap justify-evenly xl:gap-24 gap-6 max-md:justify-center max-md:gap-4">
         {new Array(5).fill(0).map((_, index) => {
           const functionNumber = index + 1;
           const consumingFrom = functionOutputInputMap[functionNumber];
@@ -83,7 +83,7 @@ function App() {
           );
         })}
       </div>
-      <div className="self-center">
+      <div className="self-center max-md:self-end">
         <label className="px-3 py-1 bg-[#4CAF79] text-xs font-semibold rounded-xl text-white">
           Initial value of x
         </label>
