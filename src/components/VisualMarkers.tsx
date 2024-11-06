@@ -23,7 +23,7 @@ export default function VisualMarker({
       return { x: 0, y: 0 };
     }
     const { x, y, width, height } = ref.current.getBoundingClientRect();
-    return { x: x + width / 2, y: y + height / 2 };
+    return { x: x + width / 2, y: y + height / 2 + window.scrollY };
   }
 
   useEffect(() => {
@@ -31,6 +31,10 @@ export default function VisualMarker({
     if (svgElement === null) {
       return;
     }
+    svgElement.style.setProperty(
+      "height",
+      `${document.documentElement.scrollHeight}px`
+    );
     for (let producerFunctionNumber in functionMapObject) {
       let consumerFunctionNumber = functionMapObject[producerFunctionNumber];
       const startRef =
@@ -77,7 +81,7 @@ export default function VisualMarker({
 
   return (
     <svg
-      className="pointer-events-none select-none absolute left-0 top-0 h-full w-full z-5"
+      className="pointer-events-none select-none absolute left-0 top-0 w-full z-5"
       ref={svg}
     ></svg>
   );
