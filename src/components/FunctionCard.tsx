@@ -17,7 +17,7 @@ export function FunctionCard({
 
   function doCalculation() {
     let output = null;
-    if (inputX) {
+    if (inputX !== undefined && !isNaN(inputX)) {
       output = calculateExpression(expression, inputX);
     }
     setOutput(output, functionNumber);

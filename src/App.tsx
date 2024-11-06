@@ -41,7 +41,7 @@ function App() {
   }, [functionOutputs]);
 
   function setInitialValue(e: React.ChangeEvent<HTMLInputElement>) {
-    setOutput(Number(e.target.value), "x");
+    setOutput(Number(e.target.value || undefined), "x");
   }
   return (
     <div className="flex gap-10 justify-center items-center h-screen px-10">
