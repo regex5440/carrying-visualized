@@ -57,6 +57,7 @@ function App() {
             defaultValue={InitialValueOfX}
             className="border-r text-lg font-bold max-w-[60%] outline-none py-3 pr-py-3"
             onChange={setInitialValue}
+            tabIndex={0}
           />
           <DotConnector ref={startPointRef} />
         </div>
@@ -77,13 +78,14 @@ function App() {
               provideOutputRef={(ref) => {
                 outputRefArray.current[functionNumber] = ref;
               }}
+              functionMapObject={functionOutputInputMap}
             />
           );
         })}
       </div>
       <div className="self-center max-md:self-end">
         <label className="px-3 py-1 bg-[#4CAF79] text-xs font-semibold rounded-xl text-white">
-          Initial value of x
+          Final Output y
         </label>
         <div className="border-2 border-[#2DD179] flex max-w-32 rounded-[15px] items-center gap-x-[15px] mt-[6px] flex-row-reverse pr-3">
           <input
@@ -91,11 +93,9 @@ function App() {
             value={Math.floor(functionOutputs[functionOutputInputMap.y]) || ""}
             className="border-l text-lg font-bold max-w-[65%] outline-none py-3 pl-1"
             readOnly
-            title={
-              Math.floor(
-                functionOutputs[functionOutputInputMap.y]
-              )?.toString() || ""
-            }
+            title={String(
+              Math.floor(functionOutputs[functionOutputInputMap.y]) || ""
+            )}
           />
           <DotConnector ref={endPointRef} />
         </div>

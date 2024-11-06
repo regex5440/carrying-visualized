@@ -1,6 +1,7 @@
 import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
 import DotConnector from "./DotConnector";
 import { calculateExpression } from "../utils";
+import { FunctionOutputInputMap } from "../utils/types";
 
 type FunctionCardProps = {
   functionNumber: number;
@@ -8,6 +9,7 @@ type FunctionCardProps = {
   setOutput: (number: number | null, functionNumber: number) => void;
   provideInputRef: (ref: RefObject<HTMLDivElement>) => void;
   provideOutputRef: (ref: RefObject<HTMLDivElement>) => void;
+  functionMapObject: FunctionOutputInputMap;
 };
 export function FunctionCard({
   functionNumber,
@@ -15,6 +17,7 @@ export function FunctionCard({
   setOutput,
   provideInputRef,
   provideOutputRef,
+  functionMapObject,
 }: FunctionCardProps) {
   const [expression, setExpression] = useState<string>("");
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
@@ -41,6 +44,13 @@ export function FunctionCard({
     provideInputRef(inputRef);
     provideOutputRef(outputRef);
   }, []);
+
+  const functionInputToOutputEntries = Object.entries(functionMapObject);
+
+  const mappedEntry = functionInputToOutputEntries.find(
+    ([_, value]) => value === functionNumber
+  );
+  const nextFunctionNumber = (mappedEntry && Number(mappedEntry[0])) || "-";
 
   return (
     <div className="card">
@@ -76,7 +86,7 @@ export function FunctionCard({
               disabled
               className="w-full border border-input rounded-input p-input"
             >
-              <option>Function: x</option>
+              <option>Function: {nextFunctionNumber ?? "-"}</option>
             </select>
           </div>
         </div>
