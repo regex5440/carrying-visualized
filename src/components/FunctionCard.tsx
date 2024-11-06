@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
 import DotConnector from "./DotConnector";
 import { calculateExpression } from "../utils";
 
@@ -6,14 +6,20 @@ type FunctionCardProps = {
   functionNumber: number;
   inputX: number | undefined;
   setOutput: (number: number | null, functionNumber: number) => void;
+  provideInputRef: (ref: RefObject<HTMLDivElement>) => void;
+  provideOutputRef: (ref: RefObject<HTMLDivElement>) => void;
 };
 export function FunctionCard({
   functionNumber,
   inputX,
   setOutput,
+  provideInputRef,
+  provideOutputRef,
 }: FunctionCardProps) {
   const [expression, setExpression] = useState<string>("");
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
+  const inputRef = useRef<HTMLDivElement>(null);
+  const outputRef = useRef<HTMLDivElement>(null);
 
   function doCalculation() {
     let output = null;
@@ -24,12 +30,17 @@ export function FunctionCard({
     setIsInvalid(!Boolean(output));
   }
 
-  function inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  function inputHandler(e: ChangeEvent<HTMLInputElement>) {
     const expression = e.target.value.toLowerCase().replace(/\s+/, "");
     setExpression(expression);
   }
 
   useEffect(doCalculation, [inputX, expression]);
+
+  useEffect(() => {
+    provideInputRef(inputRef);
+    provideOutputRef(outputRef);
+  }, []);
 
   return (
     <div className="card">
@@ -39,7 +50,10 @@ export function FunctionCard({
             {Array.from({ length: 6 })
               .fill(0)
               .map((_, index) => (
-                <div className="w-[2.73px] aspect-square rounded-full bg-[#cdcdcd]"></div>
+                <div
+                  className="w-[2.73px] aspect-square rounded-full bg-[#cdcdcd]"
+                  key={"dot" + index}
+                ></div>
               ))}
           </div>
           <h2 className="text-sm font-semibold text-heading">
@@ -68,11 +82,11 @@ export function FunctionCard({
         </div>
         <div className="mt-11 flex justify-between text-tertiary text-2xs font-medium">
           <div className="flex gap-0.5 items-center">
-            <DotConnector />
+            <DotConnector ref={inputRef} />
             input
           </div>
           <div className="flex gap-0.5 items-center">
-            output <DotConnector />
+            output <DotConnector ref={outputRef} />
           </div>
         </div>
       </div>

@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
 import "./App.css";
 import { FunctionCard } from "./components/FunctionCard";
 import DotConnector from "./components/DotConnector";
-
-type InputFunctionName = number | "x";
-type OutputFunctionName = number | "y";
+import type { FunctionOutputInputMap, InputFunctionName } from "./utils/types";
+import VisualMarker from "./components/VisualMarkers";
 
 const InitialValueOfX = 2;
 
 // Record <consumerFunctionNumber, producerFunctionNumber>
-const functionOutputInputMap: Record<OutputFunctionName, InputFunctionName> = {
+const functionOutputInputMap: FunctionOutputInputMap = {
   1: "x",
   2: 1,
   4: 2,
@@ -19,6 +18,10 @@ const functionOutputInputMap: Record<OutputFunctionName, InputFunctionName> = {
 };
 
 function App() {
+  const startPointRef = useRef<HTMLDivElement>(null);
+  const endPointRef = useRef<HTMLDivElement>(null);
+  const inputRefArray = useRef<RefObject<HTMLDivElement>[]>([]);
+  const outputRefArray = useRef<RefObject<HTMLDivElement>[]>([]);
   const [functionOutputs, setFunctionOutputs] = useState<
     Record<InputFunctionName, number>
   >({ x: InitialValueOfX });
@@ -36,11 +39,12 @@ function App() {
       return { ...prev };
     });
   }
+  //TODO: REMOVE THIS LOG
   useEffect(() => {
     console.log(functionOutputs);
   }, [functionOutputs]);
 
-  function setInitialValue(e: React.ChangeEvent<HTMLInputElement>) {
+  function setInitialValue(e: ChangeEvent<HTMLInputElement>) {
     setOutput(Number(e.target.value || undefined), "x");
   }
   return (
@@ -56,7 +60,7 @@ function App() {
             className="border-r text-lg font-bold max-w-[60%] outline-none py-3 pr-py-3"
             onChange={setInitialValue}
           />
-          <DotConnector />
+          <DotConnector ref={startPointRef} />
         </div>
       </div>
       <div className="flex flex-wrap justify-evenly gap-24">
@@ -68,6 +72,13 @@ function App() {
               functionNumber={functionNumber}
               inputX={functionOutputs[consumingFrom]}
               setOutput={setOutput}
+              key={"fcard" + functionNumber}
+              provideInputRef={(ref) => {
+                inputRefArray.current[functionNumber] = ref;
+              }}
+              provideOutputRef={(ref) => {
+                outputRefArray.current[functionNumber] = ref;
+              }}
             />
           );
         })}
@@ -83,9 +94,16 @@ function App() {
             className="border-l text-lg font-bold max-w-[60%] outline-none py-3 pl-4"
             readOnly
           />
-          <DotConnector />
+          <DotConnector ref={endPointRef} />
         </div>
       </div>
+      <VisualMarker
+        endPointRef={endPointRef}
+        functionMapObject={functionOutputInputMap}
+        inputRefArray={inputRefArray}
+        outputRefArray={outputRefArray}
+        startPointRef={startPointRef}
+      />
     </div>
   );
 }
