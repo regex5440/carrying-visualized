@@ -22,7 +22,6 @@ export function calculateExpression(
       parsableExpression += char;
     }
   }
-  console.log(parsableExpression);
   let output = null;
   try {
     output = eval(parsableExpression);

@@ -39,7 +39,6 @@ function App() {
       return { ...prev };
     });
   }
-  //TODO: REMOVE THIS LOG
   useEffect(() => {
     console.log(functionOutputs);
   }, [functionOutputs]);
