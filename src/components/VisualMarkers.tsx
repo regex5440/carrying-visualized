@@ -67,7 +67,7 @@ export default function VisualMarker({
         );
       }
       path.setAttribute("fill", "none");
-      path.setAttribute("stroke", "#0066FF4D");
+      path.setAttribute("stroke", "#0066FF22");
       path.setAttribute("stroke-width", "7");
       svgElement.appendChild(path);
     }

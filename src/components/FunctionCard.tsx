@@ -11,6 +11,15 @@ type FunctionCardProps = {
   provideOutputRef: (ref: RefObject<HTMLDivElement>) => void;
   functionMapObject: FunctionOutputInputMap;
 };
+
+const defaultEquations: Record<number, string> = {
+  "1": "x^2",
+  "2": "2x+4",
+  "3": "x^2+20",
+  "4": "x-2",
+  "5": "x/2",
+};
+
 export function FunctionCard({
   functionNumber,
   inputX,
@@ -19,7 +28,9 @@ export function FunctionCard({
   provideOutputRef,
   functionMapObject,
 }: FunctionCardProps) {
-  const [expression, setExpression] = useState<string>("");
+  const [expression, setExpression] = useState<string>(
+    defaultEquations[functionNumber]
+  );
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const inputRef = useRef<HTMLDivElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
@@ -30,12 +41,14 @@ export function FunctionCard({
       output = calculateExpression(expression, inputX);
     }
     setOutput(output, functionNumber);
-    setIsInvalid(!Boolean(output));
+    // setIsInvalid(!Boolean(output));
   }
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {
     const expression = e.target.value.toLowerCase().replace(/\s+/, "");
     setExpression(expression);
+    const isValid = /^[0-9x+\-*/^]+$/.test(expression);
+    setIsInvalid(!isValid);
   }
 
   useEffect(doCalculation, [inputX, expression]);
@@ -50,7 +63,7 @@ export function FunctionCard({
   const mappedEntry = functionInputToOutputEntries.find(
     ([_, value]) => value === functionNumber
   );
-  const nextFunctionNumber = (mappedEntry && Number(mappedEntry[0])) || "-";
+  const nextFunctionNumber = mappedEntry && Number(mappedEntry[0]);
 
   return (
     <div className="card">
@@ -75,8 +88,10 @@ export function FunctionCard({
             <div>Equation</div>
             <input
               type="text"
-              className="w-full border border-input rounded-input p-input"
+              value={expression}
+              className="w-full border border-input rounded-input p-input data-[invalid=true]:border-red-500 outline-none"
               onChange={inputHandler}
+              data-invalid={isInvalid}
             />
           </div>
           <div className="mt-4">
@@ -86,7 +101,9 @@ export function FunctionCard({
               disabled
               className="w-full border border-input rounded-input p-input"
             >
-              <option>Function: {nextFunctionNumber ?? "-"}</option>
+              <option>
+                {nextFunctionNumber ? `Function: ${nextFunctionNumber}` : "-"}
+              </option>
             </select>
           </div>
         </div>
