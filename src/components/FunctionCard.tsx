@@ -37,7 +37,7 @@ export function FunctionCard({
 
   function doCalculation() {
     let output = null;
-    if (inputX !== undefined && !isNaN(inputX)) {
+    if (inputX !== undefined && !isNaN(inputX) && !isInvalid) {
       output = calculateExpression(expression, inputX);
     }
     setOutput(output, functionNumber);
@@ -47,7 +47,9 @@ export function FunctionCard({
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {
     const expression = e.target.value.toLowerCase().replace(/\s+/, "");
     setExpression(expression);
-    const isValid = /^[0-9x+\-*/^]+$/.test(expression);
+    const isValid = /^(((\d+|x|\d+x)([\+\-\*\/\\\^]))*(\d+|x|\d+x))+$/.test(
+      expression
+    );
     setIsInvalid(!isValid);
   }
 

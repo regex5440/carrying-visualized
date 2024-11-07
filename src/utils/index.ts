@@ -2,34 +2,64 @@ export function calculateExpression(
   expression: string,
   valueOfX: number
 ): number | null {
-  //TODO: Do the BODMAS calculation here based on regex matching the set (operator + operand) based on operator priority, replace it with its result and continue until no more operators are left
   let parsableExpression = "";
   for (let i = 0; i < expression.length; i++) {
     const char = expression[i];
     const prevChar = expression[i - 1];
-    const nextChar = expression[i + 1];
     if (char === "x") {
-      if (!isNaN(Number(prevChar))) {
+      if (!isNaN(Number(prevChar)) || prevChar === "x") {
         parsableExpression += `*${valueOfX}`;
-      } else if (!isNaN(Number(nextChar))) {
-        parsableExpression += `${valueOfX}*`;
       } else {
         parsableExpression += `${valueOfX}`;
       }
-    } else if (char === "^") {
-      parsableExpression += "**";
     } else {
       parsableExpression += char;
     }
   }
-  let output = null;
-  try {
-    output = eval(parsableExpression);
-    if (isNaN(output)) {
-      output = null;
+
+  while (!/^\d+$/.test(parsableExpression)) {
+    let operation = parsableExpression.match(/(\d+)\^(\d+)/);
+    if (operation) {
+      let result = Math.pow(Number(operation[1]), Number(operation[2]));
+      parsableExpression = parsableExpression.replace(
+        operation[0],
+        result.toString()
+      );
+      continue;
     }
-  } catch (e) {
-    // output = null;
+    let operation1 = parsableExpression.match(/(\d+)[\\\/](\d+)/);
+    if (operation1) {
+      let result = Number(operation1[1]) / Number(operation1[2]);
+      parsableExpression = parsableExpression.replace(
+        operation1[0],
+        result.toString()
+      );
+      continue;
+    }
+    let operation2 = parsableExpression.match(/(\d+)\*(\d+)/);
+    if (operation2) {
+      let result = Number(operation2[1]) * Number(operation2[2]);
+      parsableExpression = parsableExpression.replace(
+        operation2[0],
+        result.toString()
+      );
+      continue;
+    }
+    let operation3 = parsableExpression.match(/(\d+)([\+-])(\d+)/);
+    if (operation3) {
+      let result =
+        operation3[2] === "+"
+          ? Number(operation3[1]) + Number(operation3[3])
+          : Number(operation3[1]) - Number(operation3[3]);
+      parsableExpression = parsableExpression.replace(
+        operation3[0],
+        result.toString()
+      );
+      continue;
+    }
+    return null;
   }
+
+  let output = Number(parsableExpression);
   return output;
 }

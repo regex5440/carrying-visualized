@@ -38,9 +38,6 @@ function App() {
       return { ...prev };
     });
   }
-  useEffect(() => {
-    console.log(functionOutputs);
-  }, [functionOutputs]);
 
   function setInitialValue(e: ChangeEvent<HTMLInputElement>) {
     setOutput(Number(e.target.value || undefined), "x");
