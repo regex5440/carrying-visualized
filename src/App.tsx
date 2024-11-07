@@ -1,4 +1,4 @@
-import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { ChangeEvent, RefObject, useRef, useState } from "react";
 import { FunctionCard } from "./components/FunctionCard";
 import DotConnector from "./components/DotConnector";
 import type { FunctionOutputInputMap, InputFunctionName } from "./utils/types";
